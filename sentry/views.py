@@ -127,7 +127,7 @@ def file_parse(data):
     markdownModel = MarkDownModel(project, project_name, 'error', rules_name, app_version, issue_url, url)
     wechat_dict = markdownModel.mark_down_info()
     req2 = requests.post(
-        url="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=0b0471ea-7b2d-4db0-a291-ae785ca8212e",
+        url="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=8796776b-58f4-4bc1-b30a-8af0f59e165a",
         headers={"Content-Type": "application/json"},
         data=json.dumps(wechat_dict).encode("utf-8"))
 
