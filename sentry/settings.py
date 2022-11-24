@@ -123,4 +123,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-ALLOWED_HOSTS = ['yhjackfan.pythonanywhere.com']
+ALLOWED_HOSTS = ['yhjackfan.pythonanywhere.com', '127.0.0.1']
