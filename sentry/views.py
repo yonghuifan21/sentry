@@ -32,7 +32,7 @@ class MarkDownModel:
          >应用: <font color=\"info\">{3}</font>
          >版本号: <font color=\"info\">{4}</font>
 	     >接口: <font color=\"info\">{5}</font>
- 	     >详情: <font color=\"info\">[查看日志]({6})</font>\n请关注:<@81095534><@81075463><81137040><81122647><80727655>
+ 	     >详情: <font color=\"info\">[查看日志]({6})</font>\n请关注:<@81095534><@81075463><@81137040><@81122647><@80727655>
         """.format(self.project_name,
                    self.project,
                    self.rules_name,
