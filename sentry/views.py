@@ -105,8 +105,15 @@ def file_parse(data):
     rules_name = ""
     if rules and len(rules) > 0:
         rules_name = ",".join(rules)
-    app_version = event["dist"]
-    url = json_data["url"]
+
+    app_version = ''
+    if "dist" in event.keys():
+        app_version = event["dist"]
+
+    url = ''
+    if "url" in json_data.keys():
+        url = json_data["url"]
+    
     tags = event["tags"]
     host = info_tags("host", tags)
     path = info_tags("path", tags)
