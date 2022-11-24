@@ -97,9 +97,9 @@ def file_parse(data):
     # dataform = str(info).strip("'<>() ").replace('\'', '\"')
     dataform = str(info)
     json_data = json.loads(dataform)
+    logging.info("json_data数据{0}".format(json_data))
     project = json_data["project"]
     project_name = json_data["project_name"]
-    logging.info("json_data数据{0}".format(json_data))
     event = json_data["event"]
     rules = json_data["triggering_rules"]
     rules_name = ""
