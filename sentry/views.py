@@ -40,6 +40,7 @@ class MarkDownModel:
                    self.project,
                    self.app_version,
                    self.issue_url,
+                   self.url,
                    self.url)
         mark_down_dict = {"content": content}
         wechat_dict["markdown"] = mark_down_dict
