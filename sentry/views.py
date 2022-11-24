@@ -113,17 +113,12 @@ def file_parse(data):
     issue_url = host + path
     if q and len(q) > 0:
         issue_url += "?" + q
-    """
-     project = ""
-    project_name = ""
-    level = ""
-    rules_name = ""
-    app_version = ""
-    issue_url = ""
-    url = ""
-    """
+    logging.info("准备发送请求")
     markdownModel = MarkDownModel(project, project_name, 'error', rules_name, app_version, issue_url, url)
     wechat_dict = markdownModel.mark_down_info()
-    requests.post(url="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=0b0471ea-7b2d-4db0-a291-ae785ca8212e",
-                  headers={"Content-Type": "application/json"},
-                  data=json.dumps(wechat_dict).encode("utf-8"))
+    req2 = requests.post(
+        url="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=0b0471ea-7b2d-4db0-a291-ae785ca8212e",
+        headers={"Content-Type": "application/json"},
+        data=json.dumps(wechat_dict).encode("utf-8"))
+
+    logging.info("z执行结果{0}".format(req2.text))
