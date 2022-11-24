@@ -69,9 +69,11 @@ def sendWechatEnterprise(request, type):
     logging.info("type == {0}".format(type))
     if type != -1 and len(request.body) > 0:
         file_parse(request.body)
-        return HttpResponseNotFound('<h1>Success</h1>')
+        response_data = {'code': '200000', 'result': '', 'message': 'success'}
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
     else:
-        return HttpResponseNotFound('<h1>Page not found</h1>')
+        response_data = {'code': '500000', 'result': 'error', 'message': 'Some error message'}
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 def info_tags(info_name, tags):
