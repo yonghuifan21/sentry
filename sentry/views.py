@@ -95,6 +95,7 @@ def file_parse(data):
     # logging.info(type(data))
     info = data.decode()
     # print(info)
+    logging.info("body数据{0}".format(info))
     dataform = str(info).strip("'<>() ").replace('\'', '\"')
     json_data = json.loads(dataform)
     project = json_data["project"]
