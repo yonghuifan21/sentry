@@ -67,7 +67,7 @@ def sendWechatEnterprise(request, type):
     # print(request.captured_kwargs)
     # type = request.POST.get("type")
     logging.info("type == {0}".format(type))
-    if type != -1:
+    if type != -1 and len(request.body) > 0:
         file_parse(request.body)
         return HttpResponseNotFound('<h1>Success</h1>')
     else:
