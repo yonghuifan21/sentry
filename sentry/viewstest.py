@@ -144,4 +144,4 @@ def file_parse(data):
         headers={"Content-Type": "application/json"},
         data=json.dumps(wechat_dict).encode("utf-8"))
 
-    logging.info("z执行结果{0}".format(req2.text))
+    logging.info("执行结果{0}".format(req2.text))
