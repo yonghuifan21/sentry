@@ -15,8 +15,9 @@ class MarkDownModel:
     app_version = ""
     issue_url = ""
     url = ""
+    error_msg = ""
 
-    def __init__(self, project, project_name, level, rules_name, app_version, issue_url, url):
+    def __init__(self, project, project_name, level, rules_name, app_version, issue_url, url, error_msg):
         self.project = project
         self.project_name = project_name
         self.level = level
@@ -24,22 +25,25 @@ class MarkDownModel:
         self.app_version = app_version
         self.issue_url = issue_url
         self.url = url
+        self.error_msg = error_msg
 
     def mark_down_info(self):
         wechat_dict = {"msgtype": "markdown"}
         content = """移动端项目<font color=\"warning\">{0}-{1}</font>告警！\n
-         >类型: <font color=\"warning\">{2}</font>
-         >应用: <font color=\"info\">{3}</font>
-         >版本号: <font color=\"info\">{4}</font>
-	     >接口: <font color=\"info\">{5}</font>
- 	     >详情: <font color=\"info\">[查看日志]({6})</font>
- 	     >日志链接: <font color=\"info\">{7}</font>\n请关注:<@81095534><@81075463><@81137040><@81122647><@80727655>
+            >类型: <font color=\"warning\">{2}</font>
+            >应用: <font color=\"info\">{3}</font>
+            >版本号: <font color=\"info\">{4}</font>
+	        >接口: <font color=\"info\">{5}</font>
+	        >错误详情: <font color=\"info\">{6}</font>
+ 	        >详情: <font color=\"info\">[查看日志]({7})</font>
+ 	        >日志链接: <font color=\"info\">{8}</font>\n请关注:<@81095534><@81075463><@81137040><@81122647><@80727655>
         """.format(self.project_name,
                    self.project,
                    self.rules_name,
                    self.project,
                    self.app_version,
                    self.issue_url,
+                   self.error_msg,
                    self.url,
                    self.url)
         mark_down_dict = {"content": content}
@@ -119,16 +123,25 @@ def file_parse(data):
     tags = event["tags"]
     host = info_tags("host", tags)
     path = info_tags("path", tags)
+    error_msg = info_tags("resps", tags)
+    error_code = info_tags("sc", tags)
     q = info_tags("q", tags)
     issue_url = host + path
     if q and len(q) > 0:
         issue_url += "?" + q
+    join_error_msg = ""
+    if error_code and len(error_code) > 0:
+        join_error_msg += "错误码： {0}  ".format(error_code)
+    if error_msg and len(error_msg) > 0:
+        join_error_msg += "错误信息： {0}  ".format(error_msg)
+
     logging.info("准备发送请求")
-    markdownModel = MarkDownModel(project, project_name, 'error', rules_name, app_version, issue_url, url)
+    markdownModel = MarkDownModel(project, project_name, 'error', rules_name, app_version, issue_url, url,
+                                  join_error_msg)
     wechat_dict = markdownModel.mark_down_info()
     req2 = requests.post(
         url="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=8796776b-58f4-4bc1-b30a-8af0f59e165a",
         headers={"Content-Type": "application/json"},
         data=json.dumps(wechat_dict).encode("utf-8"))
-    # 替换的时候注意，微信机器人链接
-    logging.info("z执行结果{0}".format(req2.text))
+
+    logging.info("执行结果{0}".format(req2.text))
