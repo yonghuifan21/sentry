@@ -92,6 +92,20 @@ def info_tags(info_name, tags):
     return ""
 
 
+def judgePostAlert(code, msg):
+    """
+    :param code 错误码
+    :param msg 错误消息
+    :return Bool True表示告警提示，False表示不报
+    """
+    # 如果错误码是200, 并且错误信息error_msg是空，不发送警告
+    if not (code and len(code) > 0):
+        return False
+    if str(code) == "200" and not (msg and len(msg) > 0):
+        return False
+    return True
+
+
 def file_parse(data):
     """
     将原始的数据解析出来，获取有用的信息
@@ -134,6 +148,10 @@ def file_parse(data):
         join_error_msg += "错误码： {0}  ".format(error_code)
     if error_msg and len(error_msg) > 0:
         join_error_msg += "错误信息： {0}  ".format(error_msg)
+
+    # 如果错误码是200, 并且错误信息error_msg是空，不发送警告
+    if not judgePostAlert(error_code, error_msg):
+        return
 
     logging.info("准备发送请求")
     markdownModel = MarkDownModel(project, project_name, 'error', rules_name, app_version, issue_url, url,
