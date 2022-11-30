@@ -105,7 +105,8 @@ def judgePostAlert(code, msg):
         return False
     return True
 
-def judgePostAlertFilter(code, msg):
+
+def judgePostAlertFilter(code, msg, path):
     """
     :param code 错误码
     :param msg 错误消息
@@ -114,21 +115,20 @@ def judgePostAlertFilter(code, msg):
     # 如果错误码是200, 并且错误信息error_msg是空，不发送警告
     if not (code and len(code) > 0):
         return False
+    # 在这个列表的取消的接口，都过滤掉
+    cancelpathlist = ['/fresh/products/app/search']
+    if str(code) == "-999" and (path in cancelpathlist):
+        return False
     if str(code) == "200" and not (msg and len(msg) > 0):
         return False
-    return True
 
-def judgePathPostAlertFilter(path):
-    """
-    :param path 路径
-    :return Bool True表示告警提示，False表示不报
-    """
     filterpathlist = ["/fresh/order/arrival",
                       "/fresh/order/canceled",
                       "/fresh/order/assigned",
-                      "/fresh/order/delivery"];
+                      "/fresh/order/delivery"]
     # 如果在列表中，不发送警告
     return not (path in filterpathlist)
+
 
 def file_parse(data):
     """
@@ -174,10 +174,9 @@ def file_parse(data):
         join_error_msg += "错误信息： {0}  ".format(error_msg)
 
     # 如果错误码是200, 并且错误信息error_msg是空，不发送警告
-    if not judgePostAlertFilter(error_code, error_msg):
+    if not judgePostAlertFilter(error_code, error_msg, path):
         return
-    if not judgePathPostAlertFilter(path):
-        return
+
     logging.info("准备发送请求")
     markdownModel = MarkDownModel(project, project_name, 'error', rules_name, app_version, issue_url, url,
                                   join_error_msg)
