@@ -179,6 +179,7 @@ def file_parse(data):
         return
 
     logging.info("准备发送请求")
+    logging.info(f"解析到的URL ===={url}")
     markdownModel = MarkDownModel(project, project_name, 'error', rules_name, app_version, issue_url, url,
                                   join_error_msg)
     wechat_dict = markdownModel.mark_down_info()
