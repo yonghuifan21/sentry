@@ -116,7 +116,8 @@ def judgePostAlertFilter(code, msg, path):
     if not (code and len(code) > 0):
         return False
     # 在这个列表的取消的接口，都过滤掉
-    cancelpathlist = ['/fresh/products/app/search']
+    cancelpathlist = ["/fresh/products/app/search",
+                      "/fresh/app/product/search"]
     if str(code) == "-999" and (path in cancelpathlist):
         return False
     if str(code) == "200" and not (msg and len(msg) > 0):
