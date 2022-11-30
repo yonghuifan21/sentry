@@ -123,7 +123,10 @@ def judgePathPostAlertFilter(path):
     :param path 路径
     :return Bool True表示告警提示，False表示不报
     """
-    filterpathlist = ["/fresh/order/arrival", "/fresh/order/cancel", "/fresh/order/assigned", "/fresh/order/delivery"];
+    filterpathlist = ["/fresh/order/arrival",
+                      "/fresh/order/canceled",
+                      "/fresh/order/assigned",
+                      "/fresh/order/delivery"];
     # 如果在列表中，不发送警告
     return not (path in filterpathlist)
 
