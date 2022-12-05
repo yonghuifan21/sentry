@@ -1,6 +1,7 @@
 import schedule
 import requests
 import json
+import logging
 
 
 def postWeakPaperAlert():
@@ -29,8 +30,9 @@ def postWeakPaperAlert():
 
 
 def job():
+    logging.info("脚本开始执行了")
     schedule.every().sunday.at("19:30").do(postWeakPaperAlert)
-    schedule.every().day.at("05:57").do(postWeakPaperAlert)
+    schedule.every(1).minutes.do(postWeakPaperAlert)
 
-
-job()
+def run():
+    job()
