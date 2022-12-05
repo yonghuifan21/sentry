@@ -17,4 +17,3 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sentry.settings')
 
 application = get_wsgi_application()
 
-job()
