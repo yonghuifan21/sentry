@@ -11,6 +11,10 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+from scripts.autoWeekPaperAlert import job
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sentry.settings')
 
 application = get_wsgi_application()
+
+job()
