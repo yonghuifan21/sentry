@@ -31,3 +31,6 @@ def postWeakPaperAlert():
 def job():
     schedule.every().sunday.at("19:30").do(postWeakPaperAlert)
     schedule.every().day.at("13:40").do(postWeakPaperAlert)
+
+
+job()

@@ -2,12 +2,10 @@ import json
 import requests
 from django.http import HttpResponse
 import logging
-from sentry import autoWeekPaperAlert
 
 # -- coding: utf-8 --
 logging.getLogger().setLevel(logging.INFO)
-# 自动执行发送脚本的任务
-autoWeekPaperAlert.job()
+
 
 
 class MarkDownModel:
