@@ -2,7 +2,7 @@ import json
 import requests
 from django.http import HttpResponse
 import logging
-import autoWeekPaperAlert
+from sentry import autoWeekPaperAlert
 
 # -- coding: utf-8 --
 logging.getLogger().setLevel(logging.INFO)
