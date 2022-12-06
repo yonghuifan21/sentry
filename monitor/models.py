@@ -1,9 +1,5 @@
 from django.db import models
 
-ACCEPTABLE_FORMATS = ['%d-%m-%Y',  # '25-10-2006'
-                      '%d/%m/%Y',  # '25/10/2006'
-                      '%d/%m/%y']  # '25/10/06'
-
 
 class Events(models.Model):
     """
