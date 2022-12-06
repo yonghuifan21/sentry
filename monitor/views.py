@@ -15,12 +15,11 @@ def index(request):
      文件解析
      @param json: 原始的文件
      """
-    # 测试提交
     beginstamp = request.GET["beginDate"]
     endstamp = request.GET["endDate"]
     begin = time.localtime(int(beginstamp))
     end = time.localtime(int(endstamp))
-    format = '%-Y-%-m-%-dT%-H:%-M:%-SZ'
+    format = '%Y-%m-%dT%H:%M:%SZ'
     beginstr = time.strftime(format, begin)
     endstr = time.strftime(format, end)
     logging.info(f"beginstr {beginstr}")
