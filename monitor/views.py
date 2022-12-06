@@ -12,17 +12,21 @@ import logging
 
 
 def index(request):
+    """
+     获取一段时间内的，告警数据
+     文件解析
+     @param json: 原始的文件
+     """
     beginstamp = request.GET["beginDate"]
     endstamp = request.GET["endDate"]
     begin = time.localtime(int(beginstamp))
     end = time.localtime(int(endstamp))
-    print(begin)
-    print(end)
-    # alllist = Warnings.objects.all().values()
-    alllist = Warnings.objects.filter(date_time__range=(begin, end))
-    warninglist = json.dumps(list(alllist), cls=DjangoJSONEncoder)
-    response = {"code": 200000, "message": "success", "data": warninglist}
-    return HttpResponse(json.dumps(response), content_type="application/json")
+    format = "%Y-%m-%dT%H:%M:%SZ"
+    beginstr = time.strftime(format, begin)
+    endstr = time.strftime(format, end)
+    alllist = Warnings.objects.filter(date_time__range=[beginstr, endstr]).order_by('date_time').values()
+    response = {"code": 200000, "message": "success", "data": list(alllist)}
+    return HttpResponse(json.dumps(response, cls=DjangoJSONEncoder), content_type="application/json")
 
 
 def insert_alert(request):
