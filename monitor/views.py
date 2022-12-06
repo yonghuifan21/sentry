@@ -20,6 +20,7 @@ def index(request):
     begin = time.localtime(int(beginstamp))
     end = time.localtime(int(endstamp))
     format = '%Y-%m-%dT%H:%M:%SZ'
+    # 解析类型
     beginstr = time.strftime(format, begin)
     endstr = time.strftime(format, end)
     logging.info(f"beginstr {beginstr}")
