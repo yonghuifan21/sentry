@@ -3,9 +3,10 @@ import requests
 from django.http import HttpResponse
 import logging
 
+from monitor.views import insert
+
 # -- coding: utf-8 --
 logging.getLogger().setLevel(logging.INFO)
-
 
 
 class MarkDownModel:
@@ -67,12 +68,6 @@ def sendWechatEnterprise(request, type):
         self.extra_kwargs = extra_kwargs
         @param request: 请求方法
   """
-    # print(request.arges)
-    # print(request.kwargs)
-    # print(request.route)
-    # print(request.tried)
-    # print(request.captured_kwargs)
-    # type = request.POST.get("type")
     logging.info("type == {0}".format(type))
     if type != -1 and len(request.body) > 0:
         file_parse(request.body)
@@ -190,3 +185,10 @@ def file_parse(data):
         data=json.dumps(wechat_dict).encode("utf-8"))
 
     logging.info("执行结果{0}".format(req2.text))
+
+    # 将数据插入数据表中
+    try:
+        insert(data)
+        logging.info("数据插入成功")
+    except:
+        logging.info("数据插入失败")

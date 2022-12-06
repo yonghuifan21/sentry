@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.views.decorators.csrf import csrf_exempt
+
+import monitor.views
 from . import views
 from . import viewstest
 
@@ -23,5 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('warning/<int:type>/', csrf_exempt(views.warningParse), name='warningParse'),
     path('warning-test/<int:type>/', csrf_exempt(viewstest.warningParse), name='warningParse'),
+    path('monitor/', monitor.views.index),
+    path('insert/', monitor.views.insert_alert),
+
 ]
 
