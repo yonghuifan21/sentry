@@ -1,7 +1,11 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.datetime_safe import datetime
+from rest_framework.settings import api_settings
 
+ACCEPTABLE_FORMATS = ['%d-%m-%Y',       # '25-10-2006'
+                      '%d/%m/%Y',       # '25/10/2006'
+                      '%d/%m/%y']       # '25/10/06'
 
 class Events(models.Model):
     """
