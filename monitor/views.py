@@ -1,6 +1,4 @@
 import time
-from datetime import datetime, date
-
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import render
 
@@ -22,8 +20,11 @@ def index(request):
     begin = time.localtime(int(beginstamp))
     end = time.localtime(int(endstamp))
     format = "%Y-%m-%dT%H:%M:%SZ"
+    # format = "YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ]"
     beginstr = time.strftime(format, begin)
     endstr = time.strftime(format, end)
+    logging.info(f"beginstr {beginstr}")
+    logging.info(f"endstr {endstr}")
     alllist = Warnings.objects.filter(date_time__range=[beginstr, endstr]).order_by('date_time').values()
     response = {"code": 200000, "message": "success", "data": list(alllist)}
     return HttpResponse(json.dumps(response, cls=DjangoJSONEncoder), content_type="application/json")
