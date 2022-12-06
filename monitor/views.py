@@ -15,6 +15,7 @@ def index(request):
      文件解析
      @param json: 原始的文件
      """
+    # 测试提交
     beginstamp = request.GET["beginDate"]
     endstamp = request.GET["endDate"]
     begin = time.localtime(int(beginstamp))
