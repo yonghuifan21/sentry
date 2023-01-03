@@ -27,6 +27,5 @@ urlpatterns = [
     path('warning-test/<int:type>/', csrf_exempt(viewstest.warningParse), name='warningParse'),
     path('monitor/', monitor.views.index),
     path('insert/', monitor.views.insert_alert),
-
 ]
 

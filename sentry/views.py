@@ -116,6 +116,9 @@ def judgePostAlertFilter(code, msg, path):
                       "/fresh/app/product/search"]
     if str(code) == "-999" and (path in cancelpathlist):
         return False
+    # 如果是-1都过滤掉
+    if str(code) == "-1001":
+        return False
     if str(code) == "200" and not (msg and len(msg) > 0):
         return False
 

@@ -31,8 +31,9 @@ def postWeakPaperAlert():
 
 def job():
     logging.info("脚本开始执行了")
-    schedule.every().sunday.at("19:30").do(postWeakPaperAlert)
-    schedule.every(1).minutes.do(postWeakPaperAlert)
+    # schedule.every().sunday.at("19:30").do(postWeakPaperAlert)
+    # schedule.every(1).minutes.do(postWeakPaperAlert)
+
 
 def run():
     job()
