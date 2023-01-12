@@ -92,6 +92,7 @@ def info_tags(info_name, tags):
             return tag[1]
     return ""
 
+
 def judgePostAlertFilter(code, msg, path):
     """
     :param code 错误码
@@ -128,11 +129,11 @@ def file_parse(data):
     @param data: 原始的文件
     """
     info = data.decode()
-    logging.info("body数据{0}".format(info))
+    # logging.info("body数据{0}".format(info))
     # dataform = str(info).strip("'<>() ").replace('\'', '\"')
     dataform = str(info)
     json_data = json.loads(dataform)
-    logging.info("json_data数据{0}".format(json_data))
+    # logging.info("json_data数据{0}".format(json_data))
     project = json_data["project"]
     project_name = json_data["project_name"]
     event = json_data["event"]
@@ -179,8 +180,8 @@ def file_parse(data):
     if not judgePostAlertFilter(error_code, error_msg, path):
         return
 
-    logging.info("准备发送请求")
-    logging.info(f"解析到的URL ===={url}")
+    # logging.info("准备发送请求")
+    logging.info(f"解析到的event_url ===={event_url}")
     markdownModel = MarkDownModel(project,
                                   project_name,
                                   'error',
@@ -196,7 +197,7 @@ def file_parse(data):
         headers={"Content-Type": "application/json"},
         data=json.dumps(wechat_dict).encode("utf-8"))
 
-    logging.info("执行结果{0}".format(req2.text))
+    # logging.info("执行结果{0}".format(req2.text))
 
     # 将数据插入数据表中
     try:
