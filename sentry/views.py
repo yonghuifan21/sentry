@@ -2,7 +2,6 @@ import json
 import requests
 from django.http import HttpResponse
 import logging
-
 from monitor.views import insert
 
 # -- coding: utf-8 --
@@ -18,8 +17,9 @@ class MarkDownModel:
     issue_url = ""
     url = ""
     error_msg = ""
+    event_id = ""
 
-    def __init__(self, project, project_name, level, rules_name, app_version, issue_url, url, error_msg):
+    def __init__(self, project, project_name, level, rules_name, app_version, issue_url, url, error_msg, event_id):
         self.project = project
         self.project_name = project_name
         self.level = level
@@ -28,6 +28,7 @@ class MarkDownModel:
         self.issue_url = issue_url
         self.url = url
         self.error_msg = error_msg
+        self.event_id = event_id
 
     def mark_down_info(self):
         wechat_dict = {"msgtype": "markdown"}
@@ -38,7 +39,8 @@ class MarkDownModel:
 	        >接口: <font color=\"info\">{5}</font>
 	        >错误详情: <font color=\"info\">{6}</font>
  	        >详情: <font color=\"info\">[查看日志]({7})</font>
- 	        >日志链接: <font color=\"info\">{8}</font>\n请关注:<@81095534><@81075463><@81137040><@81122647><@80727655>
+ 	        >日志链接: <font color=\"info\">{8}</font>
+ 	        >事件id: <font color=\"info\">{9}</font>\n请关注:<@81095534><@81075463><@81137040><@81122647><@80727655>
         """.format(self.project_name,
                    self.project,
                    self.rules_name,
@@ -47,7 +49,9 @@ class MarkDownModel:
                    self.issue_url,
                    self.error_msg,
                    self.url,
-                   self.url)
+                   self.url,
+                   self.event_id
+                   )
         mark_down_dict = {"content": content}
         wechat_dict["markdown"] = mark_down_dict
         return wechat_dict
@@ -67,6 +71,7 @@ def sendWechatEnterprise(request, type):
         self.captured_kwargs = captured_kwargs
         self.extra_kwargs = extra_kwargs
         @param request: 请求方法
+        @param type: 请求方法
   """
     logging.info("type == {0}".format(type))
     if type != -1 and len(request.body) > 0:
@@ -87,25 +92,11 @@ def info_tags(info_name, tags):
             return tag[1]
     return ""
 
-
-def judgePostAlert(code, msg):
-    """
-    :param code 错误码
-    :param msg 错误消息
-    :return Bool True表示告警提示，False表示不报
-    """
-    # 如果错误码是200, 并且错误信息error_msg是空，不发送警告
-    if not (code and len(code) > 0):
-        return False
-    if str(code) == "200" and not (msg and len(msg) > 0):
-        return False
-    return True
-
-
 def judgePostAlertFilter(code, msg, path):
     """
     :param code 错误码
     :param msg 错误消息
+    :param path 路径
     :return Bool True表示告警提示，False表示不报
     """
     # 如果错误码是200, 并且错误信息error_msg是空，不发送警告
@@ -134,7 +125,7 @@ def file_parse(data):
     """
     将原始的数据解析出来，获取有用的信息
     文件解析
-    @param info: 原始的文件
+    @param data: 原始的文件
     """
     info = data.decode()
     logging.info("body数据{0}".format(info))
@@ -153,6 +144,10 @@ def file_parse(data):
     app_version = ''
     if "dist" in event.keys():
         app_version = event["dist"]
+
+    event_id = ''
+    if "event_id" in event.keys():
+        event_id = event["event_id"]
 
     url = ''
     if "url" in json_data.keys():
@@ -173,14 +168,28 @@ def file_parse(data):
     if error_msg and len(error_msg) > 0:
         join_error_msg += "错误信息： {0}  ".format(error_msg)
 
+    # 构造日志的链接
+    id_str = ''
+    if "id" in json_data.keys():
+        id_str = json_data["id"]
+
+    event_url = "https://sentry.yonghuivip.com/organizations/yonghui/issues/{0}/events/{1}".format(id_str, event_id)
+
     # 如果错误码是200, 并且错误信息error_msg是空，不发送警告
     if not judgePostAlertFilter(error_code, error_msg, path):
         return
 
     logging.info("准备发送请求")
     logging.info(f"解析到的URL ===={url}")
-    markdownModel = MarkDownModel(project, project_name, 'error', rules_name, app_version, issue_url, url,
-                                  join_error_msg)
+    markdownModel = MarkDownModel(project,
+                                  project_name,
+                                  'error',
+                                  rules_name,
+                                  app_version,
+                                  issue_url,
+                                  event_url,
+                                  join_error_msg,
+                                  event_id)
     wechat_dict = markdownModel.mark_down_info()
     req2 = requests.post(
         url="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=8796776b-58f4-4bc1-b30a-8af0f59e165a",
@@ -193,5 +202,5 @@ def file_parse(data):
     try:
         insert(data)
         logging.info("数据插入成功")
-    except:
+    except Exception as e:
         logging.info("数据插入失败")
